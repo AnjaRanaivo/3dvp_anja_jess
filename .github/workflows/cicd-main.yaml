@@ -68,3 +68,9 @@ jobs:
 
       - name: run test
         run: npm test
+
+      - name: analyse code eslint
+        run: eslint .
+
+      - name: analyse code prettier
+        run: prettier --check '**/*.{js,jsx,ts,tsx,json,css,scss,md}'
