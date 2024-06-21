@@ -77,4 +77,5 @@ jobs:
         run: pip install semgrep
 
       - name: Analyse Semgrep
+        if: always()
         run: semgrep --config auto
