@@ -73,6 +73,7 @@ jobs:
         run: npm audit
       
       - name: Setup Semgrep
+        if: always()
         run: pip install semgrep
 
       - name: Analyse Semgrep
