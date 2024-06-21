@@ -68,6 +68,9 @@ jobs:
 
       - name: run test
         run: npm test
+      
+      - name: get dependencies analyse
+        run: npm install eslint prettier
 
       - name: analyse code eslint
         run: eslint .
