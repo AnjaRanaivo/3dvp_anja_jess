@@ -1,0 +1,28 @@
+name: CI_CD_testunit
+
+on:
+  push:
+    branches: [ "dev" ]
+
+jobs:
+  testunit:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        version: ["16", "18"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.version }}
+
+      - name: get dependencies
+        run: npm install
+
+      - name: run test
+        run: npm test
