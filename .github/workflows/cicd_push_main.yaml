@@ -1,47 +1,81 @@
-name: CI_CD_all
+# name: CI_CD_all
 
-on:
+# on:
+#   push:
+#     branches: [ "main" ]
+
+# jobs:
+#   tests:
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       matrix:
+#         version: ["16", "18"]
+
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+
+#       - name: Setup node
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ matrix.version }}
+
+#       - name: get dependencies
+#         run: npm install
+
+#       - name: run test
+#         run: npm test
+
+#       - name: audit
+#         run: npm audit
+      
+#       - name: Setup Semgrep
+#         if: always()
+#         run: pip install semgrep
+
+#       - name: Analyse Semgrep
+#         if: always()
+#         run: semgrep --config auto
+
+#   build-and-push-docker-image:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v3
+
+#       - name: Login to DockerHub
+#         uses: docker/login-action@v3
+#         with:
+#           username: ${{ secrets.DOCKER_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
+
+#       - name: Build and Push Docker image
+#         uses: docker/build-push-action@v5
+#         with:
+#           push: true
+#           tags: ${{ secrets.DOCKER_USERNAME }}/3dvp:demo
+
+name: "Semgrep Code Ql"
+on: 
   push:
-    branches: [ "main" ]
-
+    
 jobs:
-  tests:
+  semgrep:
+    name: Semgrep code ql
     runs-on: ubuntu-latest
     permissions:
       security-events: write
-
-    strategy:
-      matrix:
-        version: ["16", "18"]
-
+    container:
+      image: returntocorp/semgrep:1.74.0
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.my_token }}
+      - name: "Checkout source"
+        uses: actions/checkout@v3
 
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.version }}
-
-      - name: get dependencies
-        run: npm install
-
-      - name: run test
-        run: npm test
-
-      - name: audit
-        run: npm audit
-      
-      - name: Setup Semgrep
-        if: always()
-        run: pip install semgrep
-
-      # - name: Analyse Semgrep
-      #   if: always()
-      #   run: semgrep --config auto
-      
       - name: "Execute semgrep" 
         run: semgrep ci --sarif --output=semgrep.sarif
         env:
@@ -52,26 +86,3 @@ jobs:
         if: always()
         with:
           sarif_file: semgrep.sarif
-
-  build-and-push-docker-image:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and Push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/3dvp:demo
-
