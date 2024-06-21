@@ -1,21 +1,23 @@
 name: CI_CD_testunit
 on:
   push:
-    branches: ["dev"]
+    branches: 
+      - dev
 jobs:
   testunit:
+
+    runs-on: ubuntu_latest
+    
     strategy:
       matrix:
         version: ["16", "18"]
-
-    runs-on: ubuntu_latest
   
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.version }}
 
