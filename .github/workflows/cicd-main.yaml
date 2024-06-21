@@ -68,12 +68,12 @@ jobs:
 
       - name: run test
         run: npm test
+
+      - name: audit
+        run: npm audit
       
       - name: Setup Semgrep
         run: pip install semgrep
 
       - name: Analyse Semgrep
         run: semgrep --config auto
-
-      - name: audit
-        run: npm audit --production
