@@ -2,8 +2,6 @@ name: CI_CD_testunit
 on:
   push:
     branches: ["dev"]
-  pull_request:
-    branches: ["main"]
 jobs:
   testunit:
     strategy:
