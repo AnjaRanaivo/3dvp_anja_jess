@@ -59,11 +59,10 @@
 #         with:
 #           push: true
 #           tags: ${{ secrets.DOCKER_USERNAME }}/3dvp:demo
-name: Semgrep Code Analysis
-
-on:
+name: "Semgrep Code Ql"
+on: 
   push:
-
+    
 jobs:
   semgrep:
     name: Semgrep code ql
@@ -81,7 +80,7 @@ jobs:
         env:
           SEMGREP_RULES: p/default
 
-      - name: "Upload SARIF file to GitHub CodeQL"
+      - name: "Upload SARIF file GitHub CodeQL"
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
