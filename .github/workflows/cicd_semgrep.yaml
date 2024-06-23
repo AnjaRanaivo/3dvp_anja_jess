@@ -1,4 +1,4 @@
-name: "Semgrep hadolint"
+name: "Semgrep Code Ql"
 on: 
   pull_request:
     branches: [ "main" ]
@@ -6,25 +6,24 @@ on:
     branches: [ "main" ]
     
 jobs:
-  lint:
-    name: hadolint docker
+  semgrep:
+    name: Semgrep code ql
     runs-on: ubuntu-latest
     permissions:
       security-events: write
+    container:
+      image: returntocorp/semgrep:1.74.0
     steps:
-      - name: Checkout code
+      - name: "Checkout source"
         uses: actions/checkout@v3
 
-      - name: Run hadolint
-        uses: hadolint/hadolint-action@v2.1.0
-        with:
-          dockerfile: ./Dockerfile
-          format: sarif
-          output-file: hadolint-results.sarif
+      - name: "Execute semgrep" 
+        run: semgrep ci --sarif --output=semgrep.sarif
+        env:
+          SEMGREP_RULES: p/default
 
-      - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v3 
+      - name: "Upload SARIF file GitHub CodeQL"
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
-          sarif_file: hadolint-results.sarif
-          wait-for-processing: true
+          sarif_file: semgrep.sarif
