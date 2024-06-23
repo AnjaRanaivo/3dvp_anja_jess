@@ -51,7 +51,7 @@ npm test
 
 ### Construction de l'Image Docker
 
-Pour construire l'image Docker de l'application, exécutezzz :
+Pour construire l'image Docker de l'application, exécutezzzzz :
 
 ```sh
 docker build -t sample-app .
