@@ -59,7 +59,7 @@ docker build -t sample-app .
 
 ### Exécution de l'Application avec Docker
 
-Pour exécuter l'application dans un conteneur Docker, utilisez :
+Pour exécuter l'application dans un conteneur Docker, utilisezzzza :
 
 ```sh
 docker run -p 3000:3000 sample-app
