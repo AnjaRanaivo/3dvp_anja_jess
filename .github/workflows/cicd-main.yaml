@@ -1,8 +1,35 @@
-name: "Semgrep Code Ql"
-on: 
-  push:
-    
+name: CI_CD_analyze
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
 jobs:
+  testsanalyze:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        version: ["16", "18"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.version }}
+
+      - name: get dependencies
+        run: npm install
+
+      - name: run test
+        run: npm test
+
+      - name: audit
+        run: npm audit
+      
   semgrep:
     name: Semgrep code ql
     runs-on: ubuntu-latest
@@ -24,57 +51,3 @@ jobs:
         if: always()
         with:
           sarif_file: semgrep.sarif
-
-# name: CI_CD_analyze
-
-# on:
-#   pull_request:
-#     branches: [ "main" ]
-
-# jobs:
-#   testsanalyze:
-#     runs-on: ubuntu-latest
-
-#     strategy:
-#       matrix:
-#         version: ["16", "18"]
-
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
-
-#       - name: Setup node
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: ${{ matrix.version }}
-
-#       - name: get dependencies
-#         run: npm install
-
-#       - name: run test
-#         run: npm test
-
-#       - name: audit
-#         run: npm audit
-      
-#   analyse:
-#     name: Semgrep code ql
-#     runs-on: ubuntu-latest
-#     permissions:
-#       security-events: write
-#     container:
-#       image: returntocorp/semgrep:1.74.0
-#     steps:
-#       - name: "Checkout source"
-#         uses: actions/checkout@v3
-
-#       - name: "Execute semgrep" 
-#         run: semgrep ci --sarif --output=semgrep.sarif
-#         env:
-#           SEMGREP_RULES: p/default
-
-#       - name: "Upload SARIF file GitHub CodeQL"
-#         uses: github/codeql-action/upload-sarif@v3
-#         if: always()
-#         with:
-#           sarif_file: semgrep.sarif
